@@ -31,6 +31,9 @@
     BOOL responseFromCached;
 }
 
+@synthesize executing = _executing;
+@synthesize finished = _finished;
+
 - (id)initWithRequest:(NSURLRequest *)request options:(SDWebImageDownloaderOptions)options progress:(void (^)(NSUInteger, long long))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock cancelled:(void (^)())cancelBlock
 {
     if ((self = [super init]))
@@ -188,7 +191,7 @@
 
         // Update the data source, we must pass ALL the data, not just the new bytes
         CGImageSourceRef imageSource = CGImageSourceCreateIncremental(NULL);
-        CGImageSourceUpdateData(imageSource, (__bridge  CFDataRef)self.imageData, totalSize == self.expectedSize);
+        CGImageSourceUpdateData(imageSource, (__bridge  CFDataRef)self.imageData, totalSize == (NSUInteger)self.expectedSize);
 
         if (width + height == 0)
         {
@@ -203,7 +206,7 @@
             }
         }
 
-        if (width + height > 0 && totalSize < self.expectedSize)
+        if (width + height > 0 && totalSize < (NSUInteger)self.expectedSize)
         {
             // Create the image
             CGImageRef partialImageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
